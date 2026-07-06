@@ -1,0 +1,81 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+.installed.cfg
+*.egg
+
+# --- Virtual envs ---
+.venv/
+venv/
+env/
+.conda/
+
+# --- Env / secrets (NEVER commit — global creds live in ~/.env) ---
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+secrets.yaml
+
+# --- Notebooks ---
+.ipynb_checkpoints/
+
+# --- Testing / coverage ---
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# --- ML / model artifacts (large — keep out of git) ---
+models/
+*.gguf
+*.bin
+*.safetensors
+*.pt
+*.pth
+*.onnx
+*.npz
+adapters/
+checkpoints/
+wandb/
+mlruns/
+.dvc/cache/
+
+# --- Data (versioned via DVC or downloaded by scripts, not git) ---
+data/raw/
+data/interim/
+data/processed/
+*.sqlite
+*.db
+*.duckdb
+
+# --- Vector stores / indexes ---
+*.faiss
+index/
+.chroma/
+
+# --- Logs / traces ---
+logs/
+*.log
+traces/
+
+# --- OS ---
+.DS_Store
+.AppleDouble
+._*
+.Spotlight-V100
+.Trashes
+
+# --- IDE ---
+.vscode/
+.idea/
+*.swp
