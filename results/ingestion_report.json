@@ -1,0 +1,26 @@
+{
+  "n_files_seen": 6,
+  "n_parsed": 6,
+  "n_skipped_unsupported": [],
+  "formats": {
+    "csv": 1,
+    "html": 1,
+    "markdown": 1,
+    "txt": 3
+  },
+  "languages": {
+    "unknown": 1,
+    "en": 5
+  },
+  "n_after_dedup": 5,
+  "exact_dropped": [
+    [
+      "rag_copy",
+      "rag"
+    ]
+  ],
+  "near_dropped": [],
+  "total_chars_raw": 1030,
+  "total_chars_clean": 1010,
+  "dedup_rate": 0.1667
+}

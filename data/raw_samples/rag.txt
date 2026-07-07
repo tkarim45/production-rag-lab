@@ -1,0 +1,1 @@
+Retrieval-augmented generation combines a retriever that fetches relevant documents with a generator that conditions its answer on them, reducing hallucination on knowledge-intensive tasks.
