@@ -59,6 +59,9 @@ class Query:
     # gold labels (present in eval sets, absent at serving time)
     gold_answer: str | None = None
     relevant_chunk_ids: set[str] = field(default_factory=set)
+    # doc-level relevance (used when the corpus has multi-chunk docs and qrels are at doc
+    # granularity — decouples relevance judgments from the chunker under test).
+    relevant_doc_ids: set[str] = field(default_factory=set)
     hop_type: str = "single"  # "single" | "multi" — split metrics by this
     embedding: np.ndarray | None = None
 
@@ -86,6 +89,17 @@ class PipelineResult:
     @property
     def retrieved_chunk_ids(self) -> list[str]:
         return [s.chunk.chunk_id for s in self.retrieved]
+
+    @property
+    def retrieved_doc_ids(self) -> list[str]:
+        """Doc ids in retrieved order, deduped to first occurrence (doc-level ranking)."""
+        seen: set[str] = set()
+        out: list[str] = []
+        for s in self.retrieved:
+            if s.chunk.doc_id not in seen:
+                seen.add(s.chunk.doc_id)
+                out.append(s.chunk.doc_id)
+        return out
 
 
 # ── Stage interfaces (Protocols) ──────────────────────────────────────────────

@@ -19,27 +19,27 @@ from harness.metrics import retrieval as R
 _KS = (1, 3, 5, 10)
 
 
+def _ranked_and_relevant(r: PipelineResult) -> tuple[list[str], set[str]]:
+    """Pick the granularity: doc-level if the query carries doc qrels, else chunk-level.
+
+    Doc-level ranking dedups chunks to their doc so chunking strategies are comparable on
+    the same relevance judgments (a finer chunker that ranks the right passage higher wins).
+    """
+    if r.query.relevant_doc_ids:
+        return r.retrieved_doc_ids, r.query.relevant_doc_ids
+    return r.retrieved_chunk_ids, r.query.relevant_chunk_ids
+
+
 def _retrieval_block(results: list[PipelineResult]) -> dict[str, float]:
     out: dict[str, float] = {}
+    ranked_rel = [_ranked_and_relevant(r) for r in results]
     for k in _KS:
-        out[f"recall@{k}"] = R.mean(
-            R.recall_at_k(r.retrieved_chunk_ids, r.query.relevant_chunk_ids, k) for r in results
-        )
-        out[f"precision@{k}"] = R.mean(
-            R.precision_at_k(r.retrieved_chunk_ids, r.query.relevant_chunk_ids, k) for r in results
-        )
-        out[f"hit_rate@{k}"] = R.mean(
-            R.hit_rate_at_k(r.retrieved_chunk_ids, r.query.relevant_chunk_ids, k) for r in results
-        )
-        out[f"ndcg@{k}"] = R.mean(
-            R.ndcg_at_k(r.retrieved_chunk_ids, r.query.relevant_chunk_ids, k) for r in results
-        )
-    out["mrr"] = R.mean(
-        R.reciprocal_rank(r.retrieved_chunk_ids, r.query.relevant_chunk_ids) for r in results
-    )
-    out["map"] = R.mean(
-        R.average_precision(r.retrieved_chunk_ids, r.query.relevant_chunk_ids) for r in results
-    )
+        out[f"recall@{k}"] = R.mean(R.recall_at_k(ra, rel, k) for ra, rel in ranked_rel)
+        out[f"precision@{k}"] = R.mean(R.precision_at_k(ra, rel, k) for ra, rel in ranked_rel)
+        out[f"hit_rate@{k}"] = R.mean(R.hit_rate_at_k(ra, rel, k) for ra, rel in ranked_rel)
+        out[f"ndcg@{k}"] = R.mean(R.ndcg_at_k(ra, rel, k) for ra, rel in ranked_rel)
+    out["mrr"] = R.mean(R.reciprocal_rank(ra, rel) for ra, rel in ranked_rel)
+    out["map"] = R.mean(R.average_precision(ra, rel) for ra, rel in ranked_rel)
     return out
 
 

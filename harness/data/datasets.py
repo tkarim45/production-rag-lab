@@ -22,10 +22,13 @@ from harness.contract import Document, Query
 _BUILTIN = Path(__file__).parent / "builtin"
 
 
-def _load_builtin_mini() -> tuple[list[Document], list[Query]]:
-    corpus = [json.loads(line) for line in (_BUILTIN / "corpus.jsonl").read_text().splitlines() if line.strip()]
-    qa = [json.loads(line) for line in (_BUILTIN / "queries.jsonl").read_text().splitlines() if line.strip()]
+def _read_jsonl(path: Path) -> list[dict]:
+    return [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
 
+
+def _load_pair(corpus_file: str, query_file: str) -> tuple[list[Document], list[Query]]:
+    corpus = _read_jsonl(_BUILTIN / corpus_file)
+    qa = _read_jsonl(_BUILTIN / query_file)
     docs = [Document(doc_id=d["doc_id"], text=d["text"], metadata=d.get("metadata", {})) for d in corpus]
     queries = [
         Query(
@@ -33,11 +36,23 @@ def _load_builtin_mini() -> tuple[list[Document], list[Query]]:
             text=q["text"],
             gold_answer=q.get("gold_answer"),
             relevant_chunk_ids=set(q.get("relevant_chunk_ids", [])),
+            relevant_doc_ids=set(q.get("relevant_doc_ids", [])),
             hop_type=q.get("hop_type", "single"),
         )
         for q in qa
     ]
     return docs, queries
+
+
+def _load_builtin_mini() -> tuple[list[Document], list[Query]]:
+    # single-chunk docs, chunk-level qrels — fast smoke set
+    return _load_pair("corpus.jsonl", "queries.jsonl")
+
+
+def _load_builtin_docs() -> tuple[list[Document], list[Query]]:
+    # multi-paragraph docs + distractors, doc-level qrels — used from Phase 2 onward so
+    # chunking / retrieval / rerank choices actually differentiate.
+    return _load_pair("docs_corpus.jsonl", "docs_queries.jsonl")
 
 
 def _load_beir(_name: str) -> tuple[list[Document], list[Query]]:  # pragma: no cover - Phase 0 stub
@@ -50,6 +65,7 @@ def _load_beir(_name: str) -> tuple[list[Document], list[Query]]:  # pragma: no 
 
 _LOADERS = {
     "builtin_mini": _load_builtin_mini,
+    "builtin_docs": _load_builtin_docs,
     "beir_fiqa": lambda: _load_beir("fiqa"),
     "beir_scifact": lambda: _load_beir("scifact"),
     "beir_nfcorpus": lambda: _load_beir("nfcorpus"),

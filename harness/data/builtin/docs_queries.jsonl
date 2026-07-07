@@ -1,0 +1,20 @@
+{"query_id": "dq01", "text": "How do plants convert light energy into chemical energy?", "gold_answer": "In photosynthesis, chlorophyll in chloroplasts absorbs sunlight to make ATP and NADPH, and the Calvin cycle fixes carbon dioxide into glucose", "relevant_doc_ids": ["t01"], "hop_type": "single"}
+{"query_id": "dq02", "text": "What is released as a byproduct when water is split during photosynthesis?", "gold_answer": "oxygen", "relevant_doc_ids": ["t01"], "hop_type": "single"}
+{"query_id": "dq03", "text": "When did the Western Roman Empire fall and who deposed the last emperor?", "gold_answer": "476 AD, when Odoacer deposed the last emperor", "relevant_doc_ids": ["t02"], "hop_type": "single"}
+{"query_id": "dq04", "text": "What is the event horizon of a black hole?", "gold_answer": "the boundary beyond which nothing, not even light, can escape", "relevant_doc_ids": ["t03"], "hop_type": "single"}
+{"query_id": "dq05", "text": "How many chambers does the human heart have and what are they?", "gold_answer": "four chambers: two atria and two ventricles", "relevant_doc_ids": ["t04"], "hop_type": "single"}
+{"query_id": "dq06", "text": "What is overfitting in machine learning?", "gold_answer": "when a model memorizes the training data instead of generalizing", "relevant_doc_ids": ["t05"], "hop_type": "single"}
+{"query_id": "dq07", "text": "What determines how explosive a volcanic eruption is?", "gold_answer": "the viscosity of the magma and its dissolved gas content", "relevant_doc_ids": ["t06"], "hop_type": "single"}
+{"query_id": "dq08", "text": "Who invented the World Wide Web and when?", "gold_answer": "Tim Berners-Lee in 1989", "relevant_doc_ids": ["t07"], "hop_type": "single"}
+{"query_id": "dq09", "text": "Why do antibiotics not help against a cold?", "gold_answer": "because a cold is caused by a virus and antibiotics only work against bacteria", "relevant_doc_ids": ["t08"], "hop_type": "single"}
+{"query_id": "dq10", "text": "What is the difference between weather and climate?", "gold_answer": "weather is short-term atmospheric conditions; climate is the average over decades", "relevant_doc_ids": ["t09"], "hop_type": "single"}
+{"query_id": "dq11", "text": "What are the four bases of DNA and how do they pair?", "gold_answer": "adenine, thymine, guanine, cytosine; A pairs with T and G with C", "relevant_doc_ids": ["t10"], "hop_type": "single"}
+{"query_id": "dq12", "text": "Which ancient Roman city did Mount Vesuvius destroy, and in what year?", "gold_answer": "Pompeii, in 79 AD", "relevant_doc_ids": ["t06"], "hop_type": "single"}
+{"query_id": "dq13", "text": "What structure did Watson and Crick discover for DNA in 1953?", "gold_answer": "the double helix", "relevant_doc_ids": ["t10"], "hop_type": "single"}
+{"query_id": "dq14", "text": "What sits at the center of most galaxies including the Milky Way?", "gold_answer": "a supermassive black hole", "relevant_doc_ids": ["t03"], "hop_type": "single"}
+{"query_id": "dq15", "text": "Which Roman emperor was the first, and in what year did the empire begin?", "gold_answer": "Augustus, in 27 BC", "relevant_doc_ids": ["t02"], "hop_type": "single"}
+{"query_id": "dq16", "text": "What protocol suite do computers on the Internet use to communicate?", "gold_answer": "TCP/IP", "relevant_doc_ids": ["t07"], "hop_type": "single"}
+{"query_id": "dq17", "text": "Who discovered penicillin and in what year?", "gold_answer": "Alexander Fleming in 1928", "relevant_doc_ids": ["t08"], "hop_type": "single"}
+{"query_id": "dq18", "text": "Roughly how much blood does the heart pump per minute at rest?", "gold_answer": "about five litres per minute", "relevant_doc_ids": ["t04"], "hop_type": "single"}
+{"query_id": "dq19", "text": "Which pigment absorbs the sunlight used in photosynthesis, and what colour does it reflect?", "gold_answer": "chlorophyll, which reflects green light", "relevant_doc_ids": ["t01", "t11"], "hop_type": "multi"}
+{"query_id": "dq20", "text": "What celebrated Byzantine building was completed in 537 AD in the capital of the Eastern Roman Empire?", "gold_answer": "the Hagia Sophia in Constantinople", "relevant_doc_ids": ["t02", "t12"], "hop_type": "multi"}
