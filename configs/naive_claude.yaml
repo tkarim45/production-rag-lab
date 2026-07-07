@@ -1,0 +1,20 @@
+# Phase 0 baseline with a REAL generator: Claude Haiku 4.5 on AWS Bedrock (temp 0).
+# Needs creds in .env (AWS_REGION + AWS_ACCESS_KEY_ID + AWS_SECRET_ACCESS_KEY) and
+# `pip install -e ".[claude]"`. Retrieval metrics are identical to naive.yaml; this run
+# fills in real answer quality (EM/F1), real tokens, and real cost/query.
+dataset: builtin_mini
+retrieve_k: 10
+final_k: 5
+
+chunker:   {name: fixed, size: 256, overlap: 0}
+embedder:  {name: hashing, dim: 512}
+index:     {name: flat}
+retriever: {name: dense}
+reranker:  null
+assembler: {name: concat}
+generator:
+  name: claude
+  model: us.anthropic.claude-haiku-4-5-20251001-v1:0
+  max_tokens: 512
+  price_in_per_mtok: 1.00
+  price_out_per_mtok: 5.00

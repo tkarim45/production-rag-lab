@@ -1,0 +1,12 @@
+{"query_id": "q01", "text": "How tall is the Eiffel Tower and where is it located?", "gold_answer": "330 metres tall in Paris, France", "relevant_chunk_ids": ["d01::0"], "hop_type": "single"}
+{"query_id": "q02", "text": "What is the highest mountain on Earth?", "gold_answer": "Mount Everest", "relevant_chunk_ids": ["d02::0"], "hop_type": "single"}
+{"query_id": "q03", "text": "Who created the Python programming language and when?", "gold_answer": "Guido van Rossum in 1991", "relevant_chunk_ids": ["d03::0"], "hop_type": "single"}
+{"query_id": "q04", "text": "What architecture do large language models rely on?", "gold_answer": "the transformer", "relevant_chunk_ids": ["d04::0"], "hop_type": "single"}
+{"query_id": "q05", "text": "What is retrieval-augmented generation used for?", "gold_answer": "reducing hallucination on knowledge-intensive tasks by conditioning generation on retrieved documents", "relevant_chunk_ids": ["d05::0"], "hop_type": "single"}
+{"query_id": "q06", "text": "Where is the Great Barrier Reef and how long is it?", "gold_answer": "off the coast of Queensland, Australia, over 2300 kilometres", "relevant_chunk_ids": ["d06::0"], "hop_type": "single"}
+{"query_id": "q07", "text": "Who was the first person to walk on the Moon?", "gold_answer": "Neil Armstrong", "relevant_chunk_ids": ["d08::0"], "hop_type": "single"}
+{"query_id": "q08", "text": "What is the chemical formula of water?", "gold_answer": "H2O", "relevant_chunk_ids": ["d07::0"], "hop_type": "single"}
+{"query_id": "q09", "text": "Which engineer designed the Eiffel Tower, and what famous New York statue did he also work on?", "gold_answer": "Gustave Eiffel; he designed the internal frame of the Statue of Liberty", "relevant_chunk_ids": ["d01::0", "d11::0"], "hop_type": "multi"}
+{"query_id": "q10", "text": "Is a cross-encoder reranker faster or slower than dense retrieval, and why use it?", "gold_answer": "slower but more accurate because it jointly encodes the query and passage", "relevant_chunk_ids": ["d12::0"], "hop_type": "single"}
+{"query_id": "q11", "text": "Which sparse ranking function scores documents by term frequency and inverse document frequency?", "gold_answer": "BM25", "relevant_chunk_ids": ["d09::0"], "hop_type": "single"}
+{"query_id": "q12", "text": "Which river has the largest discharge volume of water in the world and through which country does it flow?", "gold_answer": "the Amazon River, which flows through Brazil", "relevant_chunk_ids": ["d10::0"], "hop_type": "multi"}

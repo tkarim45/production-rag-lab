@@ -7,9 +7,30 @@
 > documents. Every module is a lesson + a runnable benchmark + honest results on a shared
 > harness. Runs on an Apple M1 (8 GB); scale-out steps documented as optional cloud bursts.
 
-**Status:** 📐 Spec / scaffold. No code yet. The build order lives in
-[`TODO.md`](TODO.md) (master checklist) and [`docs/02-roadmap.md`](docs/02-roadmap.md)
-(phased plan). Build **one phase at a time**.
+**Status:** 🚧 Phase 0 (harness) complete — the shared benchmark runs end-to-end. Phases
+1–16 pending. The build order lives in [`TODO.md`](TODO.md) (master checklist) and
+[`docs/02-roadmap.md`](docs/02-roadmap.md) (phased plan). Build **one phase at a time**.
+
+```bash
+make install                       # editable install (core = numpy + pyyaml only)
+make test                          # 20 tests pass (metrics vs hand-computed + e2e smoke)
+make bench configs/naive.yaml      # naive baseline, key-free → results/leaderboard.md
+make bench-claude                  # same pipeline, real Claude Haiku on Bedrock (needs .env)
+```
+
+**Phase 0 baseline (built-in 12-doc/12-query labeled set):**
+
+| config | recall@5 | mrr | ndcg@10 | token_f1 | em | p50 latency | cost/q |
+|---|--:|--:|--:|--:|--:|--:|--:|
+| naive (key-free extractive) | 1.000 | 1.000 | 1.000 | 0.328 | 0.000 | 0.07 ms | $0 |
+| naive_claude (Haiku 4.5, Bedrock) | 1.000 | 1.000 | 1.000 | 0.381 | 0.000 | 1344 ms | $0.0005 |
+
+*Honest finding already visible at Phase 0:* on this tiny lexical corpus, exact retrieval is
+saturated (recall@5 = 1.0), and **EM/token-F1 barely separate a real grounded LLM from a
+one-line extractive baseline** — Claude's verbose, cited answers don't string-match the
+terse gold. That's the lexical-metric blind spot that motivates the calibrated LLM-judge in
+Phase 11, and why the corpus needs to grow (Phase 1) before retrieval choices become
+measurable. The harness exists to make exactly this kind of thing visible.
 
 **Mega-capstone.** Bigger than the other three capstones combined in surface area.
 Estimated effort: **9–15 months solo**, but every phase is independently valuable and

@@ -1,0 +1,14 @@
+# Phase 0 — the naive baseline every later phase must beat or justify.
+# Fixed chunk → hashing embed → flat (exact) index → dense top-k → concat → extractive mock.
+# Swap `generator` to `claude` once AWS Bedrock creds are in .env for a real-LLM run.
+dataset: builtin_mini
+retrieve_k: 10
+final_k: 5
+
+chunker:   {name: fixed, size: 256, overlap: 0}
+embedder:  {name: hashing, dim: 512}
+index:     {name: flat}
+retriever: {name: dense}
+reranker:  null
+assembler: {name: concat}
+generator: {name: extractive_mock}

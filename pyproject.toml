@@ -1,0 +1,37 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "production-rag-lab"
+version = "0.1.0"
+description = "Teach + benchmark every layer of production RAG on one shared harness"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Proprietary" }
+authors = [{ name = "Taimour Abdul Karim", email = "taimour.a.karim@gmail.com" }]
+keywords = ["rag", "retrieval", "evaluation", "benchmark", "llm", "embeddings"]
+# Core is intentionally light so Phase 0 runs and tests pass with no heavy downloads.
+dependencies = ["numpy>=1.24", "pyyaml>=6"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "ruff>=0.4"]
+# Heavy retrieval/eval stack — pulled in per phase, never required for Phase 0.
+embed = ["sentence-transformers>=2.2"]
+index = ["faiss-cpu>=1.7", "hnswlib>=0.7", "rank-bm25>=0.2"]
+data = ["datasets>=2.14", "beir>=2.0"]
+claude = ["anthropic[bedrock]>=0.40", "python-dotenv>=1.0"]
+eval = ["ragas>=0.1"]
+
+[project.scripts]
+rag-lab = "harness.runner:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["harness", "modules"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
