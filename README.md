@@ -7,30 +7,42 @@
 > documents. Every module is a lesson + a runnable benchmark + honest results on a shared
 > harness. Runs on an Apple M1 (8 GB); scale-out steps documented as optional cloud bursts.
 
-**Status:** 🚧 Phase 0 (harness) complete — the shared benchmark runs end-to-end. Phases
-1–16 pending. The build order lives in [`TODO.md`](TODO.md) (master checklist) and
-[`docs/02-roadmap.md`](docs/02-roadmap.md) (phased plan). Build **one phase at a time**.
+**Status:** 🚧 Phases 0–3 complete (**4 / 17**) — harness, ingestion, chunking, embeddings,
+all runnable and benchmarked. Phases 4–16 pending. Build order: [`TODO.md`](TODO.md) (master
+checklist) + [`docs/02-roadmap.md`](docs/02-roadmap.md). Built **one phase at a time**, each
+with a lesson, real benchmark, and an honest results table.
 
 ```bash
-make install                       # editable install (core = numpy + pyyaml only)
-make test                          # 20 tests pass (metrics vs hand-computed + e2e smoke)
+make install                       # editable install (core = numpy + pyyaml only, no downloads)
+make test                          # 37 tests pass (metrics vs hand-computed + e2e + per-phase)
 make bench configs/naive.yaml      # naive baseline, key-free → results/leaderboard.md
 make bench-claude                  # same pipeline, real Claude Haiku on Bedrock (needs .env)
+python -m harness.ingest data/raw_samples                       # Phase 1 ingestion report
+python -m harness.sweep --vary chunker --options fixed recursive sentence paragraph structural semantic parent_child   # Phase 2
+python -m harness.sweep --vary embedder --options hashing tfidf quantized_int8 quantized_binary matryoshka_64 matryoshka_128 matryoshka_256   # Phase 3
 ```
 
-**Phase 0 baseline (built-in 12-doc/12-query labeled set):**
+### Phases done — headline honest findings
 
-| config | recall@5 | mrr | ndcg@10 | token_f1 | em | p50 latency | cost/q |
-|---|--:|--:|--:|--:|--:|--:|--:|
-| naive (key-free extractive) | 1.000 | 1.000 | 1.000 | 0.328 | 0.000 | 0.07 ms | $0 |
-| naive_claude (Haiku 4.5, Bedrock) | 1.000 | 1.000 | 1.000 | 0.381 | 0.000 | 1344 ms | $0.0005 |
+- **Phase 0 (harness + naive baseline).** Config-driven swappable pipeline
+  (chunk→embed→index→retrieve→rerank→assemble→generate), full metrics module (retrieval /
+  answer / efficiency) unit-tested vs hand-computed cases, runner + leaderboard, naive baseline
+  (key-free **and** real Claude Haiku on Bedrock). *Finding:* on the toy set, EM/token-F1 barely
+  separate real Claude from a one-line extractive baseline — the lexical-metric blind spot that
+  motivates the Phase 11 LLM-judge.
+- **Phase 1 (ingestion).** Deps-free parsers (txt/md/html/csv; pdf/docx optional), cleaning,
+  exact + near-dup (from-scratch MinHash) dedup, quality report. *Finding:* normalization policy
+  decides "exact" vs "near" — a reworded near-dup folded to an exact dup after punctuation
+  normalization.
+- **Phase 2 (chunking).** 7 chunkers benchmarked on a 13-doc corpus with doc-level qrels.
+  *Finding:* **no single winner** — `recursive` wins ranking (MRR 0.917), `semantic`/`parent_child`
+  win recall@5 (1.0); the naive `fixed` chunker is the weakest ranker (recall@1 0.55).
+- **Phase 3 (embeddings).** `tfidf` + int8/binary quantization + Matryoshka truncation.
+  *Finding:* embedder choice dominates (recall@1 0.55→0.95 vs hashing); **int8 quant is lossless
+  at 4× less memory**, but **binary quant collapses** (0.05) on sparse lexical vectors — the
+  "32× smaller!" headline hides a broken index.
 
-*Honest finding already visible at Phase 0:* on this tiny lexical corpus, exact retrieval is
-saturated (recall@5 = 1.0), and **EM/token-F1 barely separate a real grounded LLM from a
-one-line extractive baseline** — Claude's verbose, cited answers don't string-match the
-terse gold. That's the lexical-metric blind spot that motivates the calibrated LLM-judge in
-Phase 11, and why the corpus needs to grow (Phase 1) before retrieval choices become
-measurable. The harness exists to make exactly this kind of thing visible.
+The whole point of the repo is to make findings like these *measurable* instead of asserted.
 
 **Mega-capstone.** Bigger than the other three capstones combined in surface area.
 Estimated effort: **9–15 months solo**, but every phase is independently valuable and

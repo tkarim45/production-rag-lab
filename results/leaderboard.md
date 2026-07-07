@@ -1,6 +1,6 @@
 # Leaderboard
 
-_9 config(s); latest run each. Full history in `leaderboard.jsonl`._
+_18 config(s); latest run each. Full history in `leaderboard.jsonl`._
 
 | config | recall@5 | mrr | ndcg@10 | token_f1 | em | latency_p50_ms | cost/q $ |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -8,8 +8,17 @@ _9 config(s); latest run each. Full history in `leaderboard.jsonl`._
 | naive_claude | 1.0000 | 1.0000 | 1.0000 | 0.3808 | 0.0000 | 1344.6 | 0.0005 |
 | p2_chunker=parent_child | 1.0000 | 0.8267 | 0.8705 | 0.2291 | 0.0000 | 0.0575 | 0.0000 |
 | p2_chunker=semantic | 1.0000 | 0.8250 | 0.8696 | 0.2341 | 0.0000 | 0.0779 | 0.0000 |
+| p3_embedder=quantized_int8 | 1.0000 | 1.0000 | 1.0000 | 0.2315 | 0.0000 | 0.1017 | 0.0000 |
+| p3_embedder=tfidf | 1.0000 | 1.0000 | 1.0000 | 0.2315 | 0.0000 | 0.0921 | 0.0000 |
 | p2_chunker=fixed | 0.9500 | 0.7500 | 0.7972 | 0.2124 | 0.0000 | 0.0951 | 0.0000 |
 | p2_chunker=recursive | 0.9500 | 0.9167 | 0.9250 | 0.2206 | 0.0000 | 0.0879 | 0.0000 |
 | p2_chunker=sentence | 0.9500 | 0.8417 | 0.8696 | 0.2139 | 0.0000 | 0.0716 | 0.0000 |
+| p3_embedder=hashing | 0.9500 | 0.7500 | 0.7972 | 0.2124 | 0.0000 | 0.0955 | 0.0000 |
+| p3_embedder=matryoshka_256 | 0.9500 | 0.8875 | 0.8969 | 0.2262 | 0.0000 | 0.0922 | 0.0000 |
+| t_fixed | 0.9500 | 0.7500 | 0.7972 | 0.2124 | 0.0000 | 0.1036 | 0.0000 |
+| t_recur | 0.9500 | 0.9167 | 0.9250 | 0.2206 | 0.0000 | 0.0967 | 0.0000 |
 | p2_chunker=paragraph | 0.9000 | 0.8125 | 0.8346 | 0.2058 | 0.0000 | 0.1354 | 0.0000 |
 | p2_chunker=structural | 0.9000 | 0.8125 | 0.8346 | 0.2058 | 0.0000 | 0.1325 | 0.0000 |
+| p3_embedder=matryoshka_128 | 0.8250 | 0.7433 | 0.7500 | 0.1947 | 0.0000 | 0.0921 | 0.0000 |
+| p3_embedder=matryoshka_64 | 0.7250 | 0.5292 | 0.5724 | 0.1736 | 0.0000 | 0.0887 | 0.0000 |
+| p3_embedder=quantized_binary | 0.2500 | 0.1333 | 0.1631 | 0.0835 | 0.0000 | 0.0802 | 0.0000 |

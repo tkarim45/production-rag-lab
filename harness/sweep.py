@@ -19,17 +19,28 @@ from harness import leaderboard, scoring
 from harness.data import load_dataset
 from harness.runner import RESULTS
 
-# sensible defaults so a bare option name (e.g. "sentence") gets reasonable params
+# option-label → full component config (name + params). Lets a sweep option like
+# "quantized_binary" expand to {name: quantized, mode: binary}.
 _STAGE_DEFAULTS: dict[str, dict[str, dict[str, Any]]] = {
     "chunker": {
-        "fixed": {"size": 60, "overlap": 10},
-        "recursive": {"size": 60, "overlap": 10},
-        "sentence": {"per_chunk": 2, "overlap": 1},
-        "paragraph": {},
-        "structural": {},
-        "semantic": {"threshold": 0.25},
-        "parent_child": {},
+        "fixed": {"name": "fixed", "size": 60, "overlap": 10},
+        "recursive": {"name": "recursive", "size": 60, "overlap": 10},
+        "sentence": {"name": "sentence", "per_chunk": 2, "overlap": 1},
+        "paragraph": {"name": "paragraph"},
+        "structural": {"name": "structural"},
+        "semantic": {"name": "semantic", "threshold": 0.25},
+        "parent_child": {"name": "parent_child"},
     },
+    "embedder": {
+        "hashing": {"name": "hashing", "dim": 512},
+        "tfidf": {"name": "tfidf"},
+        "quantized_int8": {"name": "quantized", "base": "tfidf", "mode": "int8"},
+        "quantized_binary": {"name": "quantized", "base": "tfidf", "mode": "binary"},
+        "matryoshka_64": {"name": "matryoshka", "base": "tfidf", "dim": 64},
+        "matryoshka_128": {"name": "matryoshka", "base": "tfidf", "dim": 128},
+        "matryoshka_256": {"name": "matryoshka", "base": "tfidf", "dim": 256},
+    },
+    "retriever": {},
 }
 
 _BASE = {
@@ -75,9 +86,10 @@ def main(argv: list[str] | None = None) -> int:
     for opt in args.options:
         cfg = copy.deepcopy(_BASE)
         cfg["dataset"] = args.dataset
-        params = _STAGE_DEFAULTS[args.vary].get(opt, {})
-        cfg[args.vary] = {"name": opt, **params}
+        component = _STAGE_DEFAULTS[args.vary].get(opt) or {"name": opt}
+        cfg[args.vary] = dict(component)
         row = _run_one(cfg, f"{args.phase}_{args.vary}={opt}")
+        row["_option"] = opt
         rows.append(row)
 
     leaderboard.render()
@@ -87,7 +99,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"{'option':<16} " + " ".join(f"{c:>13}" for c in cols) + "   n_chunks")
     rows.sort(key=lambda r: -r["recall@5"])
     for r in rows:
-        opt = r["config"].split("=")[-1]
+        opt = r.get("_option", r["config"].split("=")[-1])
         vals = " ".join(f"{r.get(c, 0):>13.4f}" for c in cols)
         print(f"{opt:<16} {vals}   {r['build_stats']['n_chunks']}")
     print(f"\nLeaderboard → {RESULTS / 'leaderboard.md'}")
