@@ -7,14 +7,14 @@
 > documents. Every module is a lesson + a runnable benchmark + honest results on a shared
 > harness. Runs on an Apple M1 (8 GB); scale-out steps documented as optional cloud bursts.
 
-**Status:** 🚧 Phases 0–3 complete (**4 / 17**) — harness, ingestion, chunking, embeddings,
-all runnable and benchmarked. Phases 4–16 pending. Build order: [`TODO.md`](TODO.md) (master
-checklist) + [`docs/02-roadmap.md`](docs/02-roadmap.md). Built **one phase at a time**, each
-with a lesson, real benchmark, and an honest results table.
+**Status:** 🚧 Phases 0–6 complete (**7 / 17**) — harness, ingestion, chunking, embeddings,
+indexing/ANN, retrieval, query understanding — all runnable and benchmarked. Phases 7–16
+pending. Build order: [`TODO.md`](TODO.md) + [`docs/02-roadmap.md`](docs/02-roadmap.md). Built
+**one phase at a time**, each with a lesson, real benchmark, and an honest results table.
 
 ```bash
 make install                       # editable install (core = numpy + pyyaml only, no downloads)
-make test                          # 37 tests pass (metrics vs hand-computed + e2e + per-phase)
+make test                          # 48 tests pass (metrics vs hand-computed + e2e + per-phase)
 make bench configs/naive.yaml      # naive baseline, key-free → results/leaderboard.md
 make bench-claude                  # same pipeline, real Claude Haiku on Bedrock (needs .env)
 python -m harness.ingest data/raw_samples                       # Phase 1 ingestion report
@@ -41,6 +41,15 @@ python -m harness.sweep --vary embedder --options hashing tfidf quantized_int8 q
   *Finding:* embedder choice dominates (recall@1 0.55→0.95 vs hashing); **int8 quant is lossless
   at 4× less memory**, but **binary quant collapses** (0.05) on sparse lexical vectors — the
   "32× smaller!" headline hides a broken index.
+- **Phase 4 (indexing/ANN).** from-scratch IVF + BM25 + HNSW (optional) vs exact Flat.
+  *Finding:* approximation is free at this scale (IVF/HNSW = Flat); push it (nprobe=1) and you
+  buy 2× speed for −2.5pt recall@5 — the ANN Pareto in one row. BM25 ties dense on clean text.
+- **Phase 5 (retrieval).** dense / sparse / hybrid (RRF + weighted) / MMR. *Finding:* hybrid
+  adds latency for **zero** recall gain when dense already saturates — it pays off only when the
+  query mix splits the retrievers. RRF matches weighted fusion but needs no score normalization.
+- **Phase 6 (query understanding).** PRF expansion + multi-query (+ HyDE via Bedrock).
+  *Finding:* PRF **hurts** a well-served corpus (recall@1 0.95→0.90) via query-drift — expansion
+  fixes *under*-retrieval, not good retrieval. Measure the query type before adding it.
 
 The whole point of the repo is to make findings like these *measurable* instead of asserted.
 

@@ -145,6 +145,24 @@ class Retriever(Protocol):
 
     def retrieve(self, query: Query, k: int) -> list[Scored]: ...
 
+    # optional: hybrid/sparse retrievers implement this to build their own sub-indexes
+    # (e.g. a BM25 side) from the corpus after the dense index is built.
+    # def bind_corpus(self, chunks: list[Chunk], index: Index, embedder: Embedder) -> None: ...
+
+
+@runtime_checkable
+class QueryTransformer(Protocol):
+    """Query understanding stage (Phase 6): rewrite/expand/multi-query/HyDE.
+
+    `expand` returns one or more Queries to retrieve for. It may call `retrieve_fn`
+    internally (e.g. pseudo-relevance feedback retrieves once, then expands). When it
+    returns >1 query, the pipeline retrieves each and RRF-fuses the results.
+    """
+
+    name: str
+
+    def expand(self, query: Query, retrieve_fn) -> list["Query"]: ...
+
 
 @runtime_checkable
 class Reranker(Protocol):

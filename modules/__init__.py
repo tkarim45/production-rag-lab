@@ -11,3 +11,6 @@ component registry is populated before a config is loaded.
 from modules import baseline  # noqa: F401
 from modules import chunking  # noqa: F401
 from modules import embeddings  # noqa: F401
+from modules import indexing  # noqa: F401
+from modules import query  # noqa: F401
+from modules import retrieval  # noqa: F401

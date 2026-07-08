@@ -46,14 +46,17 @@ def load_config(path: str | Path) -> dict[str, Any]:
     data.setdefault("retrieve_k", 10)
     data.setdefault("final_k", 5)
     data.setdefault("reranker", None)
+    data.setdefault("retriever", {"name": "dense"})
+    data.setdefault("query_transformer", None)
     return data
 
 
 def build_pipeline(cfg: dict[str, Any]) -> Pipeline:
     index = _component(cfg["index"], "index")
     retriever = _component(cfg.get("retriever"), "retriever")
-    # dense retriever delegates to the index — bind them
-    if retriever is not None and hasattr(retriever, "bind"):
+    # corpus binding happens in Pipeline.build (needs the chunks); here just bind the index
+    # for the simple dense retriever so it works even if build() isn't reached in a test.
+    if retriever is not None and hasattr(retriever, "bind") and not hasattr(retriever, "bind_corpus"):
         retriever.bind(index)
 
     pipeline = Pipeline(
@@ -61,6 +64,8 @@ def build_pipeline(cfg: dict[str, Any]) -> Pipeline:
         embedder=_component(cfg["embedder"], "embedder"),
         index=index,
         reranker=_component(cfg.get("reranker"), "reranker"),
+        retriever=retriever,
+        query_transformer=_component(cfg.get("query_transformer"), "query_transformer"),
         assembler=_component(cfg["assembler"], "assembler"),
         generator=_component(cfg["generator"], "generator"),
         retrieve_k=int(cfg["retrieve_k"]),

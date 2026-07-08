@@ -40,7 +40,26 @@ _STAGE_DEFAULTS: dict[str, dict[str, dict[str, Any]]] = {
         "matryoshka_128": {"name": "matryoshka", "base": "tfidf", "dim": 128},
         "matryoshka_256": {"name": "matryoshka", "base": "tfidf", "dim": 256},
     },
-    "retriever": {},
+    "index": {
+        "flat": {"name": "flat"},
+        "ivf": {"name": "ivf", "nlist": 8, "nprobe": 2},
+        "ivf_nprobe4": {"name": "ivf", "nlist": 8, "nprobe": 4},
+        "ivf_aggressive": {"name": "ivf", "nlist": 12, "nprobe": 1},
+        "bm25": {"name": "bm25"},
+        "hnsw": {"name": "hnsw"},
+    },
+    "retriever": {
+        "dense": {"name": "dense"},
+        "sparse": {"name": "sparse"},
+        "hybrid": {"name": "hybrid", "fusion": "rrf"},
+        "hybrid_weighted": {"name": "hybrid", "fusion": "weighted", "alpha": 0.5},
+        "mmr": {"name": "mmr", "lam": 0.6},
+    },
+    "query_transformer": {
+        "none": {"name": None},
+        "prf": {"name": "prf"},
+        "multiquery_prf": {"name": "multiquery_prf"},
+    },
 }
 
 _BASE = {
@@ -48,10 +67,11 @@ _BASE = {
     "retrieve_k": 10,
     "final_k": 5,
     "chunker": {"name": "fixed", "size": 60, "overlap": 10},
-    "embedder": {"name": "hashing", "dim": 512},
+    "embedder": {"name": "tfidf"},          # Phase 3 winner — meaningful dense baseline
     "index": {"name": "flat"},
     "retriever": {"name": "dense"},
     "reranker": None,
+    "query_transformer": None,
     "assembler": {"name": "concat"},
     "generator": {"name": "extractive_mock"},
 }
@@ -87,7 +107,7 @@ def main(argv: list[str] | None = None) -> int:
         cfg = copy.deepcopy(_BASE)
         cfg["dataset"] = args.dataset
         component = _STAGE_DEFAULTS[args.vary].get(opt) or {"name": opt}
-        cfg[args.vary] = dict(component)
+        cfg[args.vary] = None if component.get("name") is None else dict(component)
         row = _run_one(cfg, f"{args.phase}_{args.vary}={opt}")
         row["_option"] = opt
         rows.append(row)

@@ -22,7 +22,8 @@ from typing import Any, Callable
 # kind → name → factory(**params)
 _REGISTRY: dict[str, dict[str, Callable[..., Any]]] = {}
 
-KINDS = ("chunker", "embedder", "index", "retriever", "reranker", "assembler", "generator")
+KINDS = ("chunker", "embedder", "index", "retriever", "reranker", "assembler",
+         "generator", "query_transformer")
 
 
 def register(kind: str, name: str) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
