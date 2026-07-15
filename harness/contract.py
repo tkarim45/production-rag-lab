@@ -85,6 +85,8 @@ class PipelineResult:
     stage_latency_ms: dict[str, float] = field(default_factory=dict)
     tokens: dict[str, int] = field(default_factory=dict)   # e.g. {"in": .., "out": ..}
     cost_usd: float = 0.0
+    # generator-reported per-answer signals (Phase 10): has_citation, abstained, …
+    extra: dict[str, Any] = field(default_factory=dict)
 
     @property
     def retrieved_chunk_ids(self) -> list[str]:

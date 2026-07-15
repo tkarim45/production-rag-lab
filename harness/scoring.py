@@ -76,5 +76,14 @@ def score(results: list[PipelineResult]) -> dict[str, Any]:
     correctness = metrics.get("token_f1", 0.0)
     metrics["cost_per_correct_usd"] = E.cost_per_correct_answer(total_cost, len(results), correctness)
 
+    # Phase 10 generator signals, when the generator reports them
+    if any(r.extra for r in results):
+        cited = [r for r in results if "has_citation" in r.extra]
+        if cited:
+            metrics["citation_rate"] = R.mean(1.0 if r.extra["has_citation"] else 0.0 for r in cited)
+        abst = [r for r in results if "abstained" in r.extra]
+        if abst:
+            metrics["abstain_rate"] = R.mean(1.0 if r.extra["abstained"] else 0.0 for r in abst)
+
     metrics["n_queries"] = len(results)
     return metrics

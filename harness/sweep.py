@@ -30,6 +30,9 @@ _STAGE_DEFAULTS: dict[str, dict[str, dict[str, Any]]] = {
         "structural": {"name": "structural"},
         "semantic": {"name": "semantic", "threshold": 0.25},
         "parent_child": {"name": "parent_child"},
+        # Phase 9 contextual retrieval — same base params as `fixed` so the A/B is fair
+        "contextual": {"name": "contextual", "base": "fixed", "size": 60, "overlap": 10},
+        "contextual_llm": {"name": "contextual_llm", "base": "fixed", "size": 60, "overlap": 10},
     },
     "embedder": {
         "hashing": {"name": "hashing", "dim": 512},
@@ -59,6 +62,27 @@ _STAGE_DEFAULTS: dict[str, dict[str, dict[str, Any]]] = {
         "none": {"name": None},
         "prf": {"name": "prf"},
         "multiquery_prf": {"name": "multiquery_prf"},
+    },
+    "reranker": {
+        "none": {"name": None},
+        "lexical": {"name": "lexical"},
+        "cross_encoder": {"name": "cross_encoder"},
+        "llm": {"name": "llm"},
+    },
+    "assembler": {
+        "concat": {"name": "concat"},
+        "reorder": {"name": "reorder"},
+        "dedup": {"name": "dedup"},
+        "budget": {"name": "budget", "max_words": 120},
+        "parent": {"name": "parent"},
+    },
+    "generator": {
+        "extractive_mock": {"name": "extractive_mock"},
+        "bare": {"name": "claude_prompted", "style": "bare"},
+        "grounded": {"name": "claude_prompted", "style": "grounded"},
+        "cite_forced": {"name": "claude_prompted", "style": "cite_forced"},
+        "abstain": {"name": "claude_prompted", "style": "abstain"},
+        "grounded_t07": {"name": "claude_prompted", "style": "grounded", "temperature": 0.7},
     },
 }
 
@@ -99,6 +123,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--vary", default="chunker", choices=list(_STAGE_DEFAULTS))
     ap.add_argument("--options", nargs="+", required=True)
     ap.add_argument("--phase", default="sweep", help="label prefix for leaderboard rows")
+    # pin other stages, e.g. rerank on a deliberately WEAK first stage: --embedder hashing
+    ap.add_argument("--embedder", help="override the base embedder (e.g. hashing, tfidf)")
+    ap.add_argument("--chunker", help="override the base chunker (e.g. parent_child)")
     args = ap.parse_args(argv)
 
     RESULTS.mkdir(exist_ok=True)
@@ -106,6 +133,10 @@ def main(argv: list[str] | None = None) -> int:
     for opt in args.options:
         cfg = copy.deepcopy(_BASE)
         cfg["dataset"] = args.dataset
+        if args.embedder:
+            cfg["embedder"] = dict(_STAGE_DEFAULTS["embedder"].get(args.embedder, {"name": args.embedder}))
+        if args.chunker:
+            cfg["chunker"] = dict(_STAGE_DEFAULTS["chunker"].get(args.chunker, {"name": args.chunker}))
         component = _STAGE_DEFAULTS[args.vary].get(opt) or {"name": opt}
         cfg[args.vary] = None if component.get("name") is None else dict(component)
         row = _run_one(cfg, f"{args.phase}_{args.vary}={opt}")

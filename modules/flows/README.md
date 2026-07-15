@@ -1,0 +1,45 @@
+# Module: Advanced flows — Contextual Retrieval (Phase 9)
+
+**Lesson.** Chunks are ambiguous in isolation: *"Its revenue grew 3%"* is unretrievable because
+"Its" refers to a company named twenty chunks earlier. **Contextual Retrieval** (Anthropic,
+Sept 2024) fixes this at the cheapest possible point — prepend a short situating blurb to each
+chunk **before** embedding and BM25-indexing it. Reported retrieval-failure reduction: 35%
+(contextual embeddings) → 49% (+ contextual BM25) → 67% (+ reranking).
+
+## Implemented
+- `contextual` — deps-free: prefix the document title/section (the structural context ingestion
+  already gives you). Deterministic, zero LLM cost.
+- `contextual_llm` — the paper's method: Claude writes a one-sentence blurb per chunk (optional;
+  prompt caching is what makes per-chunk contextualization affordable in production).
+
+Both are **chunker wrappers** — the context is baked into `chunk.text` before the embedder sees
+it, which is exactly where the paper puts it. `raw_text` is preserved in metadata.
+
+## Result — `builtin_docs`, matched chunk params (size 60 / overlap 10, 25 chunks both arms)
+
+**A) On a WEAK first stage** (`hashing` embedder — where retrieval has headroom):
+
+`python -m harness.sweep --vary chunker --embedder hashing --options fixed contextual`
+
+| chunker | recall@1 | recall@5 | MRR | NDCG@10 | MAP |
+|---|--:|--:|--:|--:|--:|
+| fixed | 0.550 | 0.950 | 0.750 | 0.797 | 0.742 |
+| **contextual** | **0.650** | 0.950 | **0.817** | **0.847** | **0.808** |
+
+**+10pts recall@1, +6.7pts MRR, +5pts NDCG** — same chunk count, negligible latency.
+
+**B) On a SATURATED stage** (`tfidf`): 0.950 → 0.950, MRR 1.000 → 1.000. **No change.**
+
+**Honest findings.**
+1. **Contextual retrieval works, and it's nearly free** in the deps-free form — prefixing the
+   title lifted weak-stage recall@1 by 10 points with no extra chunks and no LLM call. The
+   direction matches Anthropic's result; the magnitude is corpus- and stage-dependent.
+2. **It only helps where retrieval has headroom** (the recurring theme of Phases 5–9). On a
+   saturated stage the prefix changes nothing — you cannot improve a 1.000.
+3. **The cheap version captured real value.** The paper uses an LLM per chunk; here the
+   *structural* context (title) — free, already in the ingestion metadata — did the work. Try
+   the free structural context before paying for LLM contextualization; measure the gap.
+4. Deferred honestly: Self-RAG / CRAG / Adaptive / Agentic RAG need an LLM control loop **and**
+   a corpus where retrieval fails often enough to route around. On a 13-doc set where dense
+   already scores 1.000, they'd be measuring noise. See `rag-architectures` for those flows
+   benchmarked on a harder corpus.

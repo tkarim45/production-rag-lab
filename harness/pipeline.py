@@ -135,4 +135,6 @@ class Pipeline:
             stage_latency_ms=lat,
             tokens=gen.get("tokens", {}),
             cost_usd=float(gen.get("cost_usd", 0.0)),
+            extra={k: v for k, v in gen.items()
+                   if k not in ("answer", "tokens", "cost_usd")},
         )

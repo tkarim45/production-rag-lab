@@ -7,14 +7,15 @@
 > documents. Every module is a lesson + a runnable benchmark + honest results on a shared
 > harness. Runs on an Apple M1 (8 GB); scale-out steps documented as optional cloud bursts.
 
-**Status:** 🚧 Phases 0–6 complete (**7 / 17**) — harness, ingestion, chunking, embeddings,
-indexing/ANN, retrieval, query understanding — all runnable and benchmarked. Phases 7–16
+**Status:** 🚧 Phases 0–10 complete (**11 / 17**) — harness, ingestion, chunking, embeddings,
+indexing/ANN, retrieval, query understanding, reranking, context assembly, contextual retrieval,
+generation — all runnable and benchmarked (generation on **real Claude Haiku**). Phases 11–16
 pending. Build order: [`TODO.md`](TODO.md) + [`docs/02-roadmap.md`](docs/02-roadmap.md). Built
 **one phase at a time**, each with a lesson, real benchmark, and an honest results table.
 
 ```bash
 make install                       # editable install (core = numpy + pyyaml only, no downloads)
-make test                          # 48 tests pass (metrics vs hand-computed + e2e + per-phase)
+make test                          # 56 tests pass (metrics vs hand-computed + e2e + per-phase)
 make bench configs/naive.yaml      # naive baseline, key-free → results/leaderboard.md
 make bench-claude                  # same pipeline, real Claude Haiku on Bedrock (needs .env)
 python -m harness.ingest data/raw_samples                       # Phase 1 ingestion report
@@ -50,6 +51,27 @@ python -m harness.sweep --vary embedder --options hashing tfidf quantized_int8 q
 - **Phase 6 (query understanding).** PRF expansion + multi-query (+ HyDE via Bedrock).
   *Finding:* PRF **hurts** a well-served corpus (recall@1 0.95→0.90) via query-drift — expansion
   fixes *under*-retrieval, not good retrieval. Measure the query type before adding it.
+- **Phase 7 (reranking).** lexical/cross-encoder/LLM rerankers. ⭐ *The cleanest finding here:*
+  on a **weak** first stage rerank lifts recall@1 **0.55 → 0.95 (+40pts)** for 2.6× latency; on
+  a **saturated** stage the same reranker gives **zero gain at 2.7× latency**. Same harness,
+  same reranker — only the first stage differs. **Rerankers fix precision, never recall.**
+- **Phase 8 (context assembly).** reorder / dedup / budget / parent. *Finding:* assembly
+  **cannot** move retrieval metrics (it runs after retrieval — a lift there is a bug); `parent`
+  expansion is the only mover (+1.5 F1). **Lost-in-the-middle is unmeasurable with a mock
+  generator** — the mitigation only matters for a model that has the bug.
+- **Phase 9 (contextual retrieval).** Anthropic's chunk-prefixing, deps-free + LLM variants.
+  *Finding:* prefixing the title lifts weak-stage recall@1 **0.55 → 0.65** at ~zero cost — the
+  *free structural* context captured the value without an LLM call.
+- **Phase 10 (generation, real Claude Haiku).** 4 prompt styles × temperature.
+  *Finding:* **prompt style is the best ROI in the lab** — bare→abstain = **+6.2 token-F1 (+17%)
+  at identical cost**. Forcing citations *improves quality* (0.355→0.409), not just auditability;
+  citation rate 0%→30% (spontaneous)→100%. Temp 0 vs 0.7 is a wash on quality — temp 0 buys
+  *determinism*, not accuracy. **EM = 0.000 for every real config** — EM is misleading for RAG.
+
+**The meta-finding across Phases 5–9:** every technique only helps where there is *headroom*.
+Hybrid, PRF, reranking, and contextual retrieval all did nothing on a saturated first stage and
+a lot on a weak one. "Should I add X?" is unanswerable without measuring your own bottleneck —
+which is the entire thesis of this repo.
 
 The whole point of the repo is to make findings like these *measurable* instead of asserted.
 
