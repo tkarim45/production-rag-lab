@@ -7,15 +7,18 @@
 > documents. Every module is a lesson + a runnable benchmark + honest results on a shared
 > harness. Runs on an Apple M1 (8 GB); scale-out steps documented as optional cloud bursts.
 
-**Status:** 🚧 Phases 0–10 complete (**11 / 17**) — harness, ingestion, chunking, embeddings,
+**Status:** ✅ **All 17 phases complete** — harness, ingestion, chunking, embeddings,
 indexing/ANN, retrieval, query understanding, reranking, context assembly, contextual retrieval,
-generation — all runnable and benchmarked (generation on **real Claude Haiku**). Phases 11–16
-pending. Build order: [`TODO.md`](TODO.md) + [`docs/02-roadmap.md`](docs/02-roadmap.md). Built
-**one phase at a time**, each with a lesson, real benchmark, and an honest results table.
+generation, evaluation (LLM judge), serving, ops, security, scaling, capstone. Every phase ships
+a lesson, a real benchmark, and an honest results table. LLM phases run on **real Claude Haiku
+(AWS Bedrock)**. Headline deliverable: [`docs/06-capstone-report.md`](docs/06-capstone-report.md).
+Optional tracks (multimodal / multilingual / long-context / SQL+RAG) remain open — see
+[`TODO.md`](TODO.md).
 
 ```bash
 make install                       # editable install (core = numpy + pyyaml only, no downloads)
-make test                          # 56 tests pass (metrics vs hand-computed + e2e + per-phase)
+make test                          # 178 tests pass (metrics vs hand-computed + e2e + per-phase)
+make bench CONFIG=configs/capstone.yaml   # the composed best-of-every-layer pipeline
 make bench configs/naive.yaml      # naive baseline, key-free → results/leaderboard.md
 make bench-claude                  # same pipeline, real Claude Haiku on Bedrock (needs .env)
 python -m harness.ingest data/raw_samples                       # Phase 1 ingestion report
@@ -68,12 +71,50 @@ python -m harness.sweep --vary embedder --options hashing tfidf quantized_int8 q
   citation rate 0%→30% (spontaneous)→100%. Temp 0 vs 0.7 is a wash on quality — temp 0 buys
   *determinism*, not accuracy. **EM = 0.000 for every real config** — EM is misleading for RAG.
 
-**The meta-finding across Phases 5–9:** every technique only helps where there is *headroom*.
-Hybrid, PRF, reranking, and contextual retrieval all did nothing on a saturated first stage and
-a lot on a weak one. "Should I add X?" is unanswerable without measuring your own bottleneck —
-which is the entire thesis of this repo.
+- **Phase 11 (evaluation, real LLM judge).** G-Eval CoT judge + groundedness + context P/R +
+  paired bootstrap CI. *Finding:* **EM is statistically useless** (0.000 everywhere, CI [0,0]);
+  the judge resolves it (bare−mock **+0.350**, CI [+0.175,+0.550]). **Groundedness inverts the
+  ranking** — the extractive mock is 1.000 grounded (it copies) but only 0.650 correct.
+- **Phase 12 (serving).** Caches + latency budgeting. *Finding:* **generation is 99.99% of the
+  p50 latency budget** (1287 of 1287.2 ms); retrieval is 0.006%. **Every Phase 4–7 retrieval
+  optimization is invisible end-to-end** — they buy quality, not latency. Only a mock generator
+  makes retrieval look worth optimizing.
+- **Phase 13 (ops).** Tracing, PSI drift, A/B with bootstrap CI, CI gate. *Finding:* **PSI at
+  n=20 measures sample size, not drift** — the split-half noise floor (where drift is impossible
+  by construction) is **2.65**, 10× the 0.25 "alert" threshold.
+- **Phase 14 (security).** Injection screen, PII+Luhn, ACL retrieval, RTBF. *Finding:* **every
+  "filter it on the way out" design measured here leaks.** Post-hoc ACL filtering scrubs the
+  citation list while the answer still repeats the secret verbatim — *it passes inspection*.
+- **Phase 15 (scaling).** 1k→50k vectors + the recall/latency dial. *Finding:* **ANN is a scale
+  technology** — at 1k, HNSW is **2.7× SLOWER** than exact Flat. And the **from-scratch numpy IVF
+  loses to exact Flat at every useful recall level** (Flat is one BLAS matmul): a pure-Python ANN
+  isn't an optimization, it's a regression.
+- **Phase 16 (capstone).** Composed best-of-every-layer: recall@1 **0.55 → 0.95**, MRR 0.75 →
+  1.00, token-F1 0.381 → **0.423**. **Six of nine levers were measured and REJECTED** — the
+  capstone is mostly *restraint*, each omission backed by a number.
 
-The whole point of the repo is to make findings like these *measurable* instead of asserted.
+## ⭐ The two things this repo actually proves
+
+**1. Every technique only helps where there is *headroom*.** Hybrid, PRF, reranking, reordering,
+and contextual retrieval all did *nothing* on a saturated first stage and *a lot* on a weak one.
+The punchline is [`configs/capstone_weak.yaml`](configs/capstone_weak.yaml): on a weak stage,
+contextual (+10pts) + a reranker (+40pts) recover recall@1 **0.55 → 0.95 — matching the
+strong-embedder capstone — for $0 and 0.28 ms.** "Should I add X?" is unanswerable without
+measuring your own bottleneck.
+
+**2. The harness caught its own bad claims — twice.**
+
+| Claim | Made in | Overturned by | What held |
+|---|---|---|---|
+| "Prompt style = **+17% quality**" | Phase 10 (token-F1) | **Phase 11** (judge) | Judge: all styles **1.000**, CI [0,0]. It was a **lexical** delta, not correctness. |
+| "Contextual retrieval **+10pts**" | Phase 9 | **Phase 13** (bootstrap) | CI **[+0.000, +0.250]** — touches zero. Directional, **not licensed at n=20**. |
+
+Both are annotated *in place* in the original phase READMEs, not quietly edited away. A harness
+that only confirms you is a vanity metric. This one argues back — which is the whole point.
+
+*(Corpus caveat, measured not guessed: at n=20 the bootstrap CI half-width is ±0.10–0.20, so
+**nothing under ~20 points is resolvable here.** The `.[data]` BEIR/HotpotQA swap is the single
+highest-value next step — it would restore headroom and likely flip several verdicts.)*
 
 **Mega-capstone.** Bigger than the other three capstones combined in surface area.
 Estimated effort: **9–15 months solo**, but every phase is independently valuable and

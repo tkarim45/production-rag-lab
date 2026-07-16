@@ -12,6 +12,7 @@ from modules import baseline  # noqa: F401
 from modules import chunking  # noqa: F401
 from modules import context  # noqa: F401
 from modules import embeddings  # noqa: F401
+from modules import evaluation  # noqa: F401
 from modules import flows  # noqa: F401
 from modules import generation  # noqa: F401
 from modules import indexing  # noqa: F401

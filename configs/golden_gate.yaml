@@ -1,0 +1,31 @@
+# Golden thresholds for the Phase 13 CI regression gate.
+#
+#   python -m harness.gate --golden configs/golden_gate.yaml
+#   exit 0 = merge allowed · exit 1 = regression, merge blocked
+#
+# Thresholds are the MEASURED naive baseline minus a margin — not aspirations. Measured on
+# builtin_mini (n=12): recall@1 0.958 · recall@5 1.000 · mrr 1.000 · token_f1 0.328 ·
+# p50 0.065 ms · $0/query.
+#
+# Why the margin: with 12 queries, one query flipping moves recall@1 by 0.083. A bar set at
+# the exact measured value fails the first time a tie reorders; a bar set at 0 never fails.
+# The margin is sized to "one query may flip, two may not".
+#
+# Why latency's bar is loose (5 ms vs a measured 0.065 ms): CI runners are shared and noisy,
+# and a flaky gate gets disabled by the team within a week — which is worse than no gate.
+# It is sized to catch an accidental O(n^2) or a real network call, not a 2x jitter.
+config: configs/naive.yaml
+dataset: builtin_mini
+
+# quality floors — regressions fall
+min:
+  recall@1: 0.85      # measured 0.958; one of 12 queries may flip
+  recall@5: 0.90      # measured 1.000
+  mrr: 0.90           # measured 1.000
+  token_f1: 0.28      # measured 0.328
+
+# cost/latency ceilings — regressions rise. A gate with only `min` merges the change that
+# holds recall and triples the bill.
+max:
+  latency_p50_ms: 5.0            # measured 0.065 ms
+  cost_per_query_usd: 0.001      # measured $0 (mock generator); catches an unintended real-LLM swap

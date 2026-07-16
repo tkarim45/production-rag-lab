@@ -1,0 +1,40 @@
+# Phase 16 — the capstone: best-of-every-layer, with the number that justifies each choice.
+#
+# Every line here is a decision the leaderboard earned. Where a phase found NO gain, the
+# capstone deliberately does NOT include the technique — that restraint IS the finding.
+#
+#   chunker    recursive          P2: best ranking (MRR 0.917 vs fixed 0.750)
+#   +contextual                   P9: +10pts recall@1 on a weak stage, ~free (title prefix)
+#   embedder   tfidf              P3: recall@1 0.55 -> 0.95 vs hashing (dominant lever)
+#              (int8 quant is lossless @ 4x less memory — enable at scale, P3)
+#   index      flat               P4/P15: exact is 1.2ms @ 50k on BLAS; ANN only wins past
+#                                 ~10k AND with compiled code. At this corpus, exact wins.
+#   retriever  dense              P5: hybrid added 60% latency for ZERO recall gain here.
+#                                 NOT included — headroom, not hype.
+#   query_tr   none               P6: PRF HURT a saturated stage (recall@1 0.95->0.90). NOT included.
+#   reranker   none               P7: zero gain on a saturated first stage at 2.7x latency.
+#                                 NOT included. (On a weak stage it was +40pts — see naive_weak.)
+#   assembler  concat             P8: reorder/dedup/budget were no-ops here; parent needs the
+#                                 parent_child chunker. Citation-preserving is the default.
+#   generator  cite_forced        P10/P11: highest groundedness (0.902) + 100% citation rate;
+#                                 judge says correctness is 1.000 (tied with all real styles).
+#
+# The honest headline: on THIS corpus the capstone is close to the naive baseline, because
+# the baseline already saturates. Six of the nine levers were measured and REJECTED. That is
+# the repo working as designed — see docs/06-capstone-report.md.
+dataset: builtin_docs
+retrieve_k: 10
+final_k: 5
+
+chunker:          {name: contextual, base: recursive, size: 60, overlap: 10}
+embedder:         {name: tfidf}
+index:            {name: flat}
+retriever:        {name: dense}
+query_transformer: null
+reranker:         null
+assembler:        {name: concat}
+generator:
+  name: claude_prompted
+  style: cite_forced
+  temperature: 0
+  model: us.anthropic.claude-haiku-4-5-20251001-v1:0

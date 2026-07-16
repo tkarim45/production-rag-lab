@@ -28,11 +28,22 @@ It also reports `has_citation` and `abstained` per answer, which the scorer turn
 | **abstain** | 0.000 | **0.417** | 0.00 | 0.00 | **$0.00064** | 1244 ms |
 | grounded @ temp 0.7 | 0.000 | 0.382 | 0.20 | 0.00 | $0.00065 | 1402 ms |
 
+> [!warning] ⚠️ Finding #1 below was **overturned by Phase 11** — read both.
+> Phase 11's LLM judge scores all four real prompt styles at **exactly 1.000** correctness
+> (abstain − bare = +0.000, CI [0.000, 0.000], **not significant**), while token-F1 calls the
+> same gap significant (+0.062, CI [+0.027, +0.102]). **The prompt styles differ in phrasing
+> overlap with the gold string, not in factual correctness.** The +17% below is a *lexical*
+> delta. Corrected claim: on this corpus, prompt style changes **citation behaviour and
+> verbosity — not correctness**. Left standing, annotated, because the mistake is the lesson:
+> a significant lexical delta is not a quality delta. See `modules/evaluation/README.md`.
+
 **Honest findings.**
-1. **Prompt style is the best ROI in the whole lab.** `bare` → `abstain` is **+6.2 token-F1
-   points (+17% relative) at identical cost** (~$0.00065/query) and *lower* latency. No infra,
-   no model change, no index rebuild — just words. Every other phase's lever cost latency,
-   memory, or dollars; this one is free.
+1. ~~**Prompt style is the best ROI in the whole lab.**~~ **(Overturned by Phase 11 — see the
+   warning above.)** `bare` → `abstain` is +6.2 token-F1 points (+17% relative) at identical cost
+   (~$0.00065/query) and *lower* latency. The *cost* claim holds — prompt changes are free. The
+   *quality* claim does not: the judge says all four styles are equally correct. What survives:
+   prompt style is a free lever for **citation rate and groundedness** (findings 2–3), not for
+   correctness on an easy corpus.
 2. **Forcing citations makes the answer *better*, not just auditable** (0.355 → 0.409, +5.4
    pts). Citing forces the model to actually read the context instead of paraphrasing from
    memory. The audit trail is a side effect of the quality mechanism.

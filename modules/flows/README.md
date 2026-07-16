@@ -30,10 +30,18 @@ it, which is exactly where the paper puts it. `raw_text` is preserved in metadat
 
 **B) On a SATURATED stage** (`tfidf`): 0.950 → 0.950, MRR 1.000 → 1.000. **No change.**
 
+> [!warning] ⚠️ Finding #1 was **qualified by Phase 13** — the point estimate is real, the claim isn't licensed.
+> Phase 13's paired bootstrap reproduces the +10pt recall@1 lift exactly as a point estimate,
+> but the **95% CI is [+0.000, +0.250]** — it touches zero. At n=20 the CI half-width is
+> ±0.10–0.20, so **nothing under ~20 points is statistically resolvable on this corpus.** The
+> direction is right and matches Anthropic's published result; this eval set simply cannot
+> license the number. Honest status: **promising, not proven.** See `modules/ops/README.md`.
+
 **Honest findings.**
 1. **Contextual retrieval works, and it's nearly free** in the deps-free form — prefixing the
    title lifted weak-stage recall@1 by 10 points with no extra chunks and no LLM call. The
    direction matches Anthropic's result; the magnitude is corpus- and stage-dependent.
+   **Caveat (Phase 13): CI [+0.000, +0.250] — directional, not significant at n=20.**
 2. **It only helps where retrieval has headroom** (the recurring theme of Phases 5–9). On a
    saturated stage the prefix changes nothing — you cannot improve a 1.000.
 3. **The cheap version captured real value.** The paper uses an LLM per chunk; here the

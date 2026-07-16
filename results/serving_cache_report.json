@@ -1,0 +1,319 @@
+{
+  "dataset": "builtin_docs",
+  "generator": "claude",
+  "semantic_cache_embedder": "sentence_transformer",
+  "embedding_cache": [
+    {
+      "base_embedder": "hashing",
+      "n_chunks": 25,
+      "dim": 512,
+      "uncached_embed_ms": 0.8652909964439459,
+      "cold_embed_ms": 5.897041999560315,
+      "warm_embed_ms": 1.6770420043030754,
+      "saving_vs_cold_pct": 71.56130133670209,
+      "speedup_vs_cold": 3.51633530014708,
+      "cold_hit_rate": 0.0,
+      "warm_hit_rate": 1.0,
+      "cold_writes": 25,
+      "namespace": "hashing__hashing__d512"
+    },
+    {
+      "base_embedder": "sentence_transformer",
+      "n_chunks": 25,
+      "dim": 384,
+      "uncached_embed_ms": 223.30704099294962,
+      "cold_embed_ms": 147.27837499958696,
+      "warm_embed_ms": 10.588165998342447,
+      "saving_vs_cold_pct": 92.81078026670777,
+      "speedup_vs_cold": 13.90971533905334,
+      "cold_hit_rate": 0.0,
+      "warm_hit_rate": 1.0,
+      "cold_writes": 25,
+      "namespace": "sentence_transformer__sentence_transformer__d384"
+    }
+  ],
+  "semantic_cache": [
+    {
+      "threshold": 0.99,
+      "cache_embedder": "sentence_transformer",
+      "generator": "claude",
+      "passes": 2,
+      "n_requests": 40,
+      "hits": 20,
+      "hit_rate": 0.5,
+      "true_hits": 20,
+      "false_hits": 0,
+      "false_hit_rate_of_requests": 0.0,
+      "false_hit_rate_of_hits": 0.0,
+      "examples": [],
+      "pass1_hits": 0,
+      "pass2_hits": 20,
+      "total_cost_usd": 0.013167,
+      "mean_generate_ms": 751.2101843754863,
+      "mean_generate_ms_on_hit": 20.592658450914314,
+      "mean_generate_ms_on_miss": 1481.8277103000582,
+      "latency": {
+        "embed_query_ms": {
+          "p50_ms": 0.04045799869345501,
+          "p95_ms": 0.6631670039496385,
+          "mean_ms": 0.1457958253013203,
+          "pct_of_budget": 0.01939864105558512,
+          "n": 40
+        },
+        "retrieve_ms": {
+          "p50_ms": 0.043624997488223016,
+          "p95_ms": 0.6343749992083758,
+          "mean_ms": 0.19030305065825814,
+          "pct_of_budget": 0.025320482008814767,
+          "n": 40
+        },
+        "assemble_ms": {
+          "p50_ms": 0.015208002878353,
+          "p95_ms": 0.08958399848779663,
+          "mean_ms": 0.031236449831339996,
+          "pct_of_budget": 0.004156118166460762,
+          "n": 40
+        },
+        "generate_ms": {
+          "p50_ms": 104.40837500209454,
+          "p95_ms": 2247.9239999956917,
+          "mean_ms": 751.2101843754863,
+          "pct_of_budget": 99.95112475876914,
+          "n": 40
+        }
+      }
+    },
+    {
+      "threshold": 0.9,
+      "cache_embedder": "sentence_transformer",
+      "generator": "claude",
+      "passes": 2,
+      "n_requests": 40,
+      "hits": 20,
+      "hit_rate": 0.5,
+      "true_hits": 20,
+      "false_hits": 0,
+      "false_hit_rate_of_requests": 0.0,
+      "false_hit_rate_of_hits": 0.0,
+      "examples": [],
+      "pass1_hits": 0,
+      "pass2_hits": 20,
+      "total_cost_usd": 0.013167,
+      "mean_generate_ms": 699.8873218250083,
+      "mean_generate_ms_on_hit": 19.261891600399395,
+      "mean_generate_ms_on_miss": 1380.5127520496171,
+      "latency": {
+        "embed_query_ms": {
+          "p50_ms": 0.043542000639718026,
+          "p95_ms": 0.359416997525841,
+          "mean_ms": 0.11580835034692427,
+          "pct_of_budget": 0.016541157221506734,
+          "n": 40
+        },
+        "retrieve_ms": {
+          "p50_ms": 0.04187499871477485,
+          "p95_ms": 0.39400000241585076,
+          "mean_ms": 0.09912700006680097,
+          "pct_of_budget": 0.014158523872322918,
+          "n": 40
+        },
+        "assemble_ms": {
+          "p50_ms": 0.008374998287763447,
+          "p95_ms": 0.056708995543885976,
+          "mean_ms": 0.020163499902992044,
+          "pct_of_budget": 0.0028799963131508786,
+          "n": 40
+        },
+        "generate_ms": {
+          "p50_ms": 91.17079099814873,
+          "p95_ms": 1529.1525419961545,
+          "mean_ms": 699.8873218250083,
+          "pct_of_budget": 99.96642032259302,
+          "n": 40
+        }
+      }
+    },
+    {
+      "threshold": 0.8,
+      "cache_embedder": "sentence_transformer",
+      "generator": "claude",
+      "passes": 2,
+      "n_requests": 40,
+      "hits": 20,
+      "hit_rate": 0.5,
+      "true_hits": 20,
+      "false_hits": 0,
+      "false_hit_rate_of_requests": 0.0,
+      "false_hit_rate_of_hits": 0.0,
+      "examples": [],
+      "pass1_hits": 0,
+      "pass2_hits": 20,
+      "total_cost_usd": 0.013167,
+      "mean_generate_ms": 698.6660354252308,
+      "mean_generate_ms_on_hit": 15.38255210070929,
+      "mean_generate_ms_on_miss": 1381.9495187497523,
+      "latency": {
+        "embed_query_ms": {
+          "p50_ms": 0.03929199738195166,
+          "p95_ms": 0.6021250010235235,
+          "mean_ms": 0.14394262398127466,
+          "pct_of_budget": 0.02059258268120947,
+          "n": 40
+        },
+        "retrieve_ms": {
+          "p50_ms": 0.05091699858894572,
+          "p95_ms": 0.7256669996422715,
+          "mean_ms": 0.1539614997454919,
+          "pct_of_budget": 0.02202589355078378,
+          "n": 40
+        },
+        "assemble_ms": {
+          "p50_ms": 0.014500001270789653,
+          "p95_ms": 0.07091699808370322,
+          "mean_ms": 0.03834787476080237,
+          "pct_of_budget": 0.0054860871631964795,
+          "n": 40
+        },
+        "generate_ms": {
+          "p50_ms": 29.429624999465887,
+          "p95_ms": 1658.598374997382,
+          "mean_ms": 698.6660354252308,
+          "pct_of_budget": 99.95189543660481,
+          "n": 40
+        }
+      }
+    },
+    {
+      "threshold": 0.7,
+      "cache_embedder": "sentence_transformer",
+      "generator": "claude",
+      "passes": 2,
+      "n_requests": 40,
+      "hits": 22,
+      "hit_rate": 0.55,
+      "true_hits": 18,
+      "false_hits": 4,
+      "false_hit_rate_of_requests": 0.1,
+      "false_hit_rate_of_hits": 0.18181818181818182,
+      "examples": [
+        {
+          "asked": "What is released as a byproduct when water is split during photosynthesis?",
+          "served_answer_for": "How do plants convert light energy into chemical energy?",
+          "cosine": 0.709
+        },
+        {
+          "asked": "Which Roman emperor was the first, and in what year did the empire begin?",
+          "served_answer_for": "When did the Western Roman Empire fall and who deposed the last emperor?",
+          "cosine": 0.7131
+        },
+        {
+          "asked": "What is released as a byproduct when water is split during photosynthesis?",
+          "served_answer_for": "How do plants convert light energy into chemical energy?",
+          "cosine": 0.709
+        }
+      ],
+      "pass1_hits": 2,
+      "pass2_hits": 20,
+      "total_cost_usd": 0.011987000000000001,
+      "mean_generate_ms": 621.829520850406,
+      "mean_generate_ms_on_hit": 24.177229091450997,
+      "mean_generate_ms_on_miss": 1352.29343300024,
+      "latency": {
+        "embed_query_ms": {
+          "p50_ms": 0.034374999813735485,
+          "p95_ms": 0.2517500033718534,
+          "mean_ms": 0.0744427246900159,
+          "pct_of_budget": 0.011968419387339562,
+          "n": 40
+        },
+        "retrieve_ms": {
+          "p50_ms": 0.044333995901979506,
+          "p95_ms": 0.22862500190967694,
+          "mean_ms": 0.0757061994590913,
+          "pct_of_budget": 0.0121715526818903,
+          "n": 40
+        },
+        "assemble_ms": {
+          "p50_ms": 0.008000002708286047,
+          "p95_ms": 0.031416995625477284,
+          "mean_ms": 0.01327917543676449,
+          "pct_of_budget": 0.002134939866952115,
+          "n": 40
+        },
+        "generate_ms": {
+          "p50_ms": 43.030458997236565,
+          "p95_ms": 1494.452541002829,
+          "mean_ms": 621.829520850406,
+          "pct_of_budget": 99.97372508806382,
+          "n": 40
+        }
+      }
+    },
+    {
+      "threshold": 0.6,
+      "cache_embedder": "sentence_transformer",
+      "generator": "claude",
+      "passes": 2,
+      "n_requests": 40,
+      "hits": 26,
+      "hit_rate": 0.65,
+      "true_hits": 14,
+      "false_hits": 12,
+      "false_hit_rate_of_requests": 0.3,
+      "false_hit_rate_of_hits": 0.46153846153846156,
+      "examples": [
+        {
+          "asked": "What is released as a byproduct when water is split during photosynthesis?",
+          "served_answer_for": "How do plants convert light energy into chemical energy?",
+          "cosine": 0.709
+        },
+        {
+          "asked": "Which ancient Roman city did Mount Vesuvius destroy, and in what year?",
+          "served_answer_for": "When did the Western Roman Empire fall and who deposed the last emperor?",
+          "cosine": 0.6481
+        },
+        {
+          "asked": "What structure did Watson and Crick discover for DNA in 1953?",
+          "served_answer_for": "What are the four bases of DNA and how do they pair?",
+          "cosine": 0.6695
+        }
+      ],
+      "pass1_hits": 6,
+      "pass2_hits": 20,
+      "total_cost_usd": 0.009443,
+      "mean_generate_ms": 471.7697759750081,
+      "mean_generate_ms_on_hit": 29.311487153441142,
+      "mean_generate_ms_on_miss": 1293.4780266436323,
+      "latency": {
+        "embed_query_ms": {
+          "p50_ms": 0.034666998544707894,
+          "p95_ms": 0.21958299475954846,
+          "mean_ms": 0.060810474860772956,
+          "pct_of_budget": 0.012884399420857152,
+          "n": 40
+        },
+        "retrieve_ms": {
+          "p50_ms": 0.038416997995227575,
+          "p95_ms": 0.305041998217348,
+          "mean_ms": 0.11595110045163892,
+          "pct_of_budget": 0.024567482739237013,
+          "n": 40
+        },
+        "assemble_ms": {
+          "p50_ms": 0.007333001121878624,
+          "p95_ms": 0.030791998142376542,
+          "mean_ms": 0.02326775029359851,
+          "pct_of_budget": 0.004929923489232211,
+          "n": 40
+        },
+        "generate_ms": {
+          "p50_ms": 18.602958996780217,
+          "p95_ms": 1333.0715830015833,
+          "mean_ms": 471.7697759750081,
+          "pct_of_budget": 99.95761819435067,
+          "n": 40
+        }
+      }
+    }
+  ]
+}

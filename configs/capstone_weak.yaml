@@ -1,0 +1,23 @@
+# Phase 16 — the capstone applied to a WEAK first stage (the case the techniques were built for).
+#
+# capstone.yaml rejects rerank/hybrid/PRF because the tfidf stage saturates. But a weak stage is
+# the realistic production case (a mediocre embedder on a hard corpus) — and there every rejected
+# lever comes back. Same harness, same corpus, only the embedder weakened to `hashing`:
+#
+#   P7: rerank on the weak stage = recall@1 0.55 -> 0.95 (+40pts)
+#   P9: contextual prefix        = recall@1 0.55 -> 0.65 (+10pts)
+#
+# This config is the answer to "so are these techniques worth it or not?" — they are worth
+# exactly as much as your bottleneck allows. Run both; read the delta.
+dataset: builtin_docs
+retrieve_k: 10
+final_k: 5
+
+chunker:          {name: contextual, base: recursive, size: 60, overlap: 10}
+embedder:         {name: hashing, dim: 512}     # the deliberately weak first stage
+index:            {name: flat}
+retriever:        {name: dense}
+query_transformer: null
+reranker:         {name: lexical}               # earns its keep HERE (+40pts in P7)
+assembler:        {name: concat}
+generator:        {name: extractive_mock}       # key-free so this config runs offline

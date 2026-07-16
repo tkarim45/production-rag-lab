@@ -22,6 +22,8 @@ index = ["faiss-cpu>=1.7", "hnswlib>=0.7", "rank-bm25>=0.2"]
 data = ["datasets>=2.14", "beir>=2.0"]
 claude = ["anthropic[bedrock]>=0.40", "python-dotenv>=1.0"]
 eval = ["ragas>=0.1"]
+# Phase 12 serving API — the harness/CLIs never need it; only modules/serving/api.py does.
+serve = ["fastapi>=0.110", "uvicorn>=0.27"]
 
 [project.scripts]
 rag-lab = "harness.runner:main"
