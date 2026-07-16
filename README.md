@@ -7,13 +7,21 @@
 > documents. Every module is a lesson + a runnable benchmark + honest results on a shared
 > harness. Runs on an Apple M1 (8 GB); scale-out steps documented as optional cloud bursts.
 
-**Status:** ✅ **All 17 phases complete** — harness, ingestion, chunking, embeddings,
-indexing/ANN, retrieval, query understanding, reranking, context assembly, contextual retrieval,
+**Status:** ✅ **All 17 phases built and benchmarked** — harness, ingestion, chunking, embeddings,
+indexing/ANN, retrieval, query understanding, reranking, context assembly, advanced flows,
 generation, evaluation (LLM judge), serving, ops, security, scaling, capstone. Every phase ships
 a lesson, a real benchmark, and an honest results table. LLM phases run on **real Claude Haiku
 (AWS Bedrock)**. Headline deliverable: [`docs/06-capstone-report.md`](docs/06-capstone-report.md).
-Optional tracks (multimodal / multilingual / long-context / SQL+RAG) remain open — see
-[`TODO.md`](TODO.md).
+
+> **Precisely, because this repo is about not overclaiming:** every phase has a working
+> implementation, a benchmark, and a writeup — but several ship a *subset* of their technique
+> list with the rest **deferred with a stated reason** (not silently dropped). The biggest:
+> **Phase 9 implements Contextual Retrieval only** — GraphRAG / RAPTOR / Self-RAG / CRAG /
+> Adaptive / Agentic need an LLM control loop **and** a corpus where retrieval fails often enough
+> to route around; on a 13-doc set where dense scores 1.000 they would measure noise (they're
+> benchmarked in the sibling `rag-architectures` repo instead). Also deferred: IVFPQ/DiskANN/
+> SPLADE/ColBERT, RAGAS, human-labeled judge calibration (κ), the million-doc cloud burst, and
+> the 4 optional tracks. Each is listed in [`TODO.md`](TODO.md) with its reason.
 
 ```bash
 make install                       # editable install (core = numpy + pyyaml only, no downloads)

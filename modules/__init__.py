@@ -19,3 +19,10 @@ from modules import indexing  # noqa: F401
 from modules import query  # noqa: F401
 from modules import reranking  # noqa: F401
 from modules import retrieval  # noqa: F401
+# Phase 12/14 register stages too (embedder=cached, generator=semantic_cached,
+# retriever=acl, assembler=screened|spotlight). Importing only makes them *nameable* in a
+# config — nothing is applied unless a config asks for it, so the opt-in property holds.
+# `modules.ops` (Phase 13) is deliberately absent: it registers no stage, it wraps the
+# pipeline (see harness/gate.py, modules/ops/).
+from modules import security  # noqa: F401
+from modules import serving  # noqa: F401
