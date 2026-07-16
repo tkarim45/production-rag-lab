@@ -107,8 +107,6 @@ def _register_optional() -> None:
 
         @parser(".pdf")
         def _parse_pdf(path: Path):  # pragma: no cover - optional dep
-            import fitz
-
             doc = fitz.open(path)
             text = "\n".join(page.get_text() for page in doc)
             return text, {"format": "pdf", "pages": doc.page_count, "chars": len(text)}
@@ -120,8 +118,6 @@ def _register_optional() -> None:
 
         @parser(".docx")
         def _parse_docx(path: Path):  # pragma: no cover - optional dep
-            import docx
-
             d = docx.Document(str(path))
             text = "\n".join(p.text for p in d.paragraphs)
             return text, {"format": "docx", "chars": len(text)}

@@ -11,9 +11,9 @@
     "generator": "extractive_mock"
   },
   "build_stats": {
-    "chunk_ms": 0.030166003853082657,
-    "embed_ms": 0.27783302357420325,
-    "index_build_ms": 0.01999997766688466,
+    "chunk_ms": 0.030999995942693204,
+    "embed_ms": 0.30329199944389984,
+    "index_build_ms": 0.02512499486329034,
     "n_docs": 12,
     "n_chunks": 12,
     "embed_dim": 512
@@ -42,10 +42,10 @@
   "token_f1_single": 0.31109730848861283,
   "em_multi": 0.0,
   "token_f1_multi": 0.4151193633952255,
-  "latency_p50_ms": 0.06516592111438513,
-  "latency_p95_ms": 0.15704293036833405,
-  "latency_p99_ms": 0.15704293036833405,
-  "latency_mean_ms": 0.07273614755831659,
+  "latency_p50_ms": 0.06416699034161866,
+  "latency_p95_ms": 0.15220799832604825,
+  "latency_p99_ms": 0.15220799832604825,
+  "latency_mean_ms": 0.07198583080025855,
   "total_cost_usd": 0.0,
   "cost_per_query_usd": 0.0,
   "cost_per_correct_usd": 0.0,

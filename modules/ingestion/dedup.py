@@ -43,8 +43,7 @@ def shingles(text: str, k: int = 3) -> set[int]:
 
 
 def _hash_family(n: int) -> list[tuple[int, int]]:
-    """n (a, b) pairs for hashes h(x) = (a*x + b) mod P, deterministic (no RNG)."""
-    P = (1 << 31) - 1
+    """n (a, b) pairs for hashes h(x) = (a*x + b) mod _MOD, deterministic (no RNG)."""
     pairs = []
     a, b = 1, 0
     for i in range(n):

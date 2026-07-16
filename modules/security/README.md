@@ -142,7 +142,7 @@ property and is not measured here** — that needs a real generator and an attac
 metric, which is `llm-red-teaming-framework`'s job, not this bench's. Multi-tenancy is
 enforced as a metadata partition (single index, filter at retrieval), which is the weakest of
 the tenancy models — index-per-tenant is stronger and unmeasured. Source-trust/provenance
-scoring is **not implemented** and remains open in `TODO.md`.
+scoring is **not implemented** and remains open.
 
 ## Next
 Phase 15 (scaling) is where the RTBF rebuild cost stops being 0.48 ms and becomes the design

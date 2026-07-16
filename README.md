@@ -21,7 +21,8 @@ a lesson, a real benchmark, and an honest results table. LLM phases run on **rea
 > to route around; on a 13-doc set where dense scores 1.000 they would measure noise (they're
 > benchmarked in the sibling `rag-architectures` repo instead). Also deferred: IVFPQ/DiskANN/
 > SPLADE/ColBERT, RAGAS, human-labeled judge calibration (κ), the million-doc cloud burst, and
-> the 4 optional tracks. Each is listed in [`TODO.md`](TODO.md) with its reason.
+> the 4 optional tracks. Each deferral and its reason is stated in the relevant module's
+> `README.md` and summarised in [`docs/06-capstone-report.md`](docs/06-capstone-report.md).
 
 ```bash
 make install                       # editable install (core = numpy + pyyaml only, no downloads)
@@ -74,10 +75,11 @@ python -m harness.sweep --vary embedder --options hashing tfidf quantized_int8 q
   *Finding:* prefixing the title lifts weak-stage recall@1 **0.55 → 0.65** at ~zero cost — the
   *free structural* context captured the value without an LLM call.
 - **Phase 10 (generation, real Claude Haiku).** 4 prompt styles × temperature.
-  *Finding:* **prompt style is the best ROI in the lab** — bare→abstain = **+6.2 token-F1 (+17%)
-  at identical cost**. Forcing citations *improves quality* (0.355→0.409), not just auditability;
-  citation rate 0%→30% (spontaneous)→100%. Temp 0 vs 0.7 is a wash on quality — temp 0 buys
-  *determinism*, not accuracy. **EM = 0.000 for every real config** — EM is misleading for RAG.
+  *Finding:* ⚠️ **the headline here was later OVERTURNED by Phase 11** — see below. What was
+  claimed: "prompt style is the best ROI in the lab" (bare→abstain = +6.2 token-F1, +17%, at
+  identical cost). What survives: prompt style is a free lever for **citation rate**
+  (0%→30% spontaneous→100%) and **groundedness**, not for correctness. Temp 0 vs 0.7 is a wash
+  on quality — temp 0 buys *determinism*, not accuracy. **EM = 0.000 for every real config.**
 
 - **Phase 11 (evaluation, real LLM judge).** G-Eval CoT judge + groundedness + context P/R +
   paired bootstrap CI. *Finding:* **EM is statistically useless** (0.000 everywhere, CI [0,0]);
@@ -227,7 +229,6 @@ cloud step, not a laptop requirement.
 ```
 production-rag-lab/
 ├── README.md
-├── TODO.md                     # ← master phase checklist (start here)
 ├── docs/
 │   ├── 00-overview.md          # problem, goals, success criteria
 │   ├── 01-curriculum-map.md    # full taxonomy — every technique covered
@@ -246,7 +247,7 @@ production-rag-lab/
 1. Read [`docs/00-overview.md`](docs/00-overview.md) → [`docs/01-curriculum-map.md`](docs/01-curriculum-map.md).
 2. Build **Phase 0 (the harness) first** — every later phase plugs into it. Nothing can be
    benchmarked without the shared harness + datasets + metrics.
-3. Then work [`TODO.md`](TODO.md) / [`docs/02-roadmap.md`](docs/02-roadmap.md) **one phase
+3. Then work [`docs/02-roadmap.md`](docs/02-roadmap.md) **one phase
    at a time**. Each phase is a shippable mini-project with its own results.
 
 ## Tech stack

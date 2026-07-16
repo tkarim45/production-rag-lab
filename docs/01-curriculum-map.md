@@ -148,4 +148,4 @@ marked ➕ were added beyond the original brief (production essentials).
 ---
 
 Every item above has a home in the phased roadmap (`02-roadmap.md`) and a checkbox in
-`TODO.md`. If a technique isn't listed here, it isn't in scope — add it here first.
+[`02-roadmap.md`](02-roadmap.md). If a technique isn't listed here, it isn't in scope — add it here first.

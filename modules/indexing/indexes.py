@@ -32,9 +32,9 @@ def _tok(text: str) -> list[str]:
 # ── IVF (from-scratch) ────────────────────────────────────────────────────────
 
 
-def _kmeans(x: np.ndarray, k: int, iters: int = 25, seed: int = 0) -> np.ndarray:
-    """Tiny Lloyd's k-means (deterministic init = first k distinct rows)."""
-    rng = np.random.RandomState(seed)
+def _kmeans(x: np.ndarray, k: int, iters: int = 25) -> np.ndarray:
+    """Tiny Lloyd's k-means. Init is deterministic (evenly-spaced picks, no RNG) so an index
+    build is reproducible — an ANN benchmark whose recall moves between runs measures noise."""
     n = len(x)
     k = min(k, n)
     # k-means++-ish deterministic seed: evenly spaced picks
