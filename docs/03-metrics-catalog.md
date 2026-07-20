@@ -1,4 +1,4 @@
-# 03 — Metrics catalog
+# 03: Metrics catalog
 
 Every metric the harness computes, defined once. All implemented in `harness/metrics/`,
 unit-tested against hand-computed cases (Phase 0). Report all of them per config so
@@ -42,7 +42,7 @@ comparisons are apples-to-apples.
 | **Latency p50 / p95 / p99** | end-to-end and per-stage (retrieve, rerank, generate) |
 | **TTFT** | time to first token (streaming) |
 | **Cost / query** | $ per query (embedding + LLM tokens) |
-| **Cost / correct answer** | cost/query ÷ correctness — the real efficiency number |
+| **Cost / correct answer** | cost/query ÷ correctness, the real efficiency number |
 | **Index build time** | seconds to build the index |
 | **Index memory / storage** | RAM + disk footprint |
 | **Throughput (QPS)** | queries/sec at a concurrency level |
@@ -65,9 +65,9 @@ comparisons are apples-to-apples.
 
 ## Reporting rules
 
-- Always report a metric **with its efficiency cost** — a +2pt correctness that triples
+- Always report a metric **with its efficiency cost**, a +2pt correctness that triples
   latency/cost is a different decision than a free one.
 - Report **variance / significance** when comparing configs (bootstrap CI or a proper
-  test) — don't crown a winner on a 1-run delta.
-- Split e2e metrics by **query type** (single-hop vs multi-hop) — aggregates hide the
+  test), don't crown a winner on a 1-run delta.
+- Split e2e metrics by **query type** (single-hop vs multi-hop), aggregates hide the
   multi-hop failure of query-transform methods.

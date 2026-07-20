@@ -8,15 +8,15 @@ answerable text, and deduplication (exact **and** near-dup) so the index isn't d
 copies.
 
 ## What's implemented
-- **Parsers** (`parsers.py`) — deps-free for `.txt/.md/.html/.csv` (HTML strips
+- **Parsers** (`parsers.py`), deps-free for `.txt/.md/.html/.csv` (HTML strips
   script/style/nav/footer boilerplate; CSV linearizes rows to retrievable prose). `.pdf`
   (pymupdf) and `.docx` (python-docx) register only if the optional dep is installed.
-- **Cleaning** (`clean.py`) — whitespace normalization, boilerplate-line stripping, a cheap
+- **Cleaning** (`clean.py`), whitespace normalization, boilerplate-line stripping, a cheap
   stopword language guess. Conservative on purpose: aggressive cleaning drops answers.
-- **Dedup** (`dedup.py`) — exact via normalized SHA-1; **near-dup via from-scratch MinHash**
+- **Dedup** (`dedup.py`), exact via normalized SHA-1; **near-dup via from-scratch MinHash**
   (k-shingles → n hash-min signatures → estimated Jaccard → threshold). No `datasketch` dep,
   so the mechanism is legible.
-- **Ingestor** (`ingestor.py`) — dir → clean, deduped, metadata-rich `Document`s + an
+- **Ingestor** (`ingestor.py`), dir → clean, deduped, metadata-rich `Document`s + an
   `IngestionReport` (parse fidelity, dedup rate, format/language counts).
 
 ## Result (on `data/raw_samples/`, 6 files)
@@ -35,9 +35,9 @@ copies.
 "knowledge-intensive" → "knowledge intensive"), but the dedup normalizer folds punctuation,
 so after normalization it became an **exact** dup and was caught by the cheaper hash before
 MinHash ran. Lesson: your normalization policy determines whether a pair is "exact" or
-"near" — they aren't fixed categories, and the cheap exact check subsumes near-dups your
+"near", they aren't fixed categories, and the cheap exact check subsumes near-dups your
 normalizer happens to collapse. `everest_note.txt` (a genuinely reworded Everest sentence)
-was **kept** — below the Jaccard threshold — which is the correct, conservative call.
+was **kept**, below the Jaccard threshold, which is the correct, conservative call.
 
 ## Next
 Phase 2 (chunking) consumes this cleaned corpus. The tiny sample set is a mechanism demo;

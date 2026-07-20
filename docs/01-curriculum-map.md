@@ -1,4 +1,4 @@
-# 01 — Curriculum map (the full taxonomy)
+# 01: Curriculum map (the full taxonomy)
 
 Every technique the repo covers, grouped by layer. This is the "did we miss anything"
 reference. Each leaf maps to a module under `modules/` with a lesson + benchmark. Items
@@ -34,7 +34,7 @@ marked ➕ were added beyond the original brief (production essentials).
 - Symmetric vs asymmetric (query vs passage) encoders; instruction-prefixed embedders
 
 ## D. Indexing & vector stores
-- Exact: Flat (brute force) — ground-truth baseline
+- Exact: Flat (brute force), ground-truth baseline
 - ANN: IVF, IVFPQ, HNSW, ScaNN-style, DiskANN (on-disk) ➕
 - Recall@k vs latency vs memory vs build-time Pareto (reuse `vector-db-benchmark` method)
 - Sparse: BM25 (keyword)
@@ -80,7 +80,7 @@ marked ➕ were added beyond the original brief (production essentials).
 ## I. Advanced retrieval flows
 - GraphRAG (entity/knowledge graph)
 - RAPTOR (hierarchical recursive summary tree)
-- Contextual retrieval (Anthropic — prepend chunk context before embedding) ➕
+- Contextual retrieval (Anthropic, prepend chunk context before embedding) ➕
 - Self-RAG (model decides when/what to retrieve) ➕
 - Corrective RAG / CRAG (grade retrieval, fall back to web) ➕
 - Adaptive RAG (route by query complexity) ➕
@@ -148,4 +148,4 @@ marked ➕ were added beyond the original brief (production essentials).
 ---
 
 Every item above has a home in the phased roadmap (`02-roadmap.md`) and a checkbox in
-[`02-roadmap.md`](02-roadmap.md). If a technique isn't listed here, it isn't in scope — add it here first.
+[`02-roadmap.md`](02-roadmap.md). If a technique isn't listed here, it isn't in scope, add it here first.

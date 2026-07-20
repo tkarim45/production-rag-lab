@@ -1,9 +1,9 @@
-# 04 — Setup (Apple M1, 8 GB)
+# 04: Setup (Apple M1, 8 GB)
 
 ## 0. Golden rules
 
 - Never conda `base` / system Python (hook-enforced). Use `personal`; `claude` for scratch.
-- Usable memory ≈ 4–5 GB after the OS. Corpora on the laptop = 10k–100k docs; the
+- Usable memory ≈ 4 to 5 GB after the OS. Corpora on the laptop = 10k, 100k docs; the
   million-doc run is an optional cloud burst (the code path is the same).
 - Cloud creds from global `~/.env`; never paste/commit secrets.
 
@@ -34,11 +34,11 @@ Route: local model for cheap/bulk eval passes, Claude API for judged/hard querie
 
 ## 3. Embeddings on the M1
 
-- Default: a small sentence-transformer (e.g. `bge-small-en-v1.5`, `all-MiniLM-L6-v2`) —
+- Default: a small sentence-transformer (e.g. `bge-small-en-v1.5`, `all-MiniLM-L6-v2`), 
   fast, low memory.
 - Quantization module (Phase 3): int8 / binary embeddings for memory + speed.
 - Embedder fine-tune (Phase 3): MLX-LoRA on a small base.
-- Cache embeddings to disk (DuckDB/npz) — recomputing across benchmark runs is the biggest
+- Cache embeddings to disk (DuckDB/npz), recomputing across benchmark runs is the biggest
   time sink; cache aggressively.
 
 ## 4. Datasets (Phase 0)
@@ -72,7 +72,7 @@ make test                            # metric unit tests + pipeline smoke tests
 
 - On the M1: prove the code path on 100k docs with HNSW / DiskANN (on-disk).
 - Million-doc run: documented cloud burst (bigger instance or managed vector DB). Same
-  adapters, larger data — never required on the laptop.
+  adapters, larger data, never required on the laptop.
 - Cache + memory-map indexes; stream ingestion; don't hold the whole corpus in RAM.
 
 ## 8. Troubleshooting
