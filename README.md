@@ -103,6 +103,13 @@ python -m harness.sweep --vary embedder --options hashing tfidf quantized_int8 q
   1.00, token-F1 0.381 → **0.423**. **Six of nine levers were measured and REJECTED**, the
   capstone is mostly *restraint*, each omission backed by a number.
 
+
+## Architecture
+
+![architecture](docs/assets/architecture.png)
+
+*Interactive/exportable version: [`docs/assets/architecture.html`](docs/assets/architecture.html).*
+
 ## ⭐ The two things this repo actually proves
 
 **1. Every technique only helps where there is *headroom*.** Hybrid, PRF, reranking, reordering,
